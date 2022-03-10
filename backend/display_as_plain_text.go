@@ -1,26 +1,32 @@
 package backend
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
-func DisplayAsPlainText(info WeatherInfo) {
-	fmt.Printf("Location: %s\n", info.location())
+func FormatAsPlainText(info WeatherInfo) (text string) {
+	var body []string
+	body = append(body, fmt.Sprintf("📍 Location: %s\n", info.location()))
 	if len(info.Kind) > 0 {
-		fmt.Printf("Weather description: %s\n", info.Kind[0].Description)
+		body = append(body, fmt.Sprintf("Weather description: %s\n", info.Kind[0].Description))
 	}
-	fmt.Printf("Temperature: %.2f °C\n", info.Main.Temperature)
-	fmt.Printf("Temperature feels like: %.2f °C\n", info.Main.TemperatureFeelsLike)
-	fmt.Printf("Temperature min: %.2f °C\n", info.Main.TemperatureMin)
-	fmt.Printf("Temperature max: %.2f °C\n", info.Main.TemperatureMax)
-	fmt.Printf("Wind direction: %d°\n", info.Wind.Direction)
-	fmt.Printf("Wind speed: %.2f km/h\n", convertToKmPerH(info.Wind.Speed))
-	fmt.Printf(
+	body = append(body, fmt.Sprintf("🌡️ Temperature: %.2f °C\n", info.Main.Temperature))
+	body = append(body, fmt.Sprintf("Temperature feels like: %.2f °C\n", info.Main.TemperatureFeelsLike))
+	body = append(body, fmt.Sprintf("Temperature min: %.2f °C\n", info.Main.TemperatureMin))
+	body = append(body, fmt.Sprintf("Temperature max: %.2f °C\n", info.Main.TemperatureMax))
+	body = append(body, fmt.Sprintf("Wind direction: %d°\n", info.Wind.Direction))
+	body = append(body, fmt.Sprintf("🌬️ Wind speed: %.2f km/h\n", convertToKmPerH(info.Wind.Speed)))
+	body = append(body, fmt.Sprintf(
 		"Wind gust speed: %.2f km/h\n",
 		convertToKmPerH(info.Wind.GustSpeed),
-	)
-	fmt.Printf("Visibility: %d m\n", info.Visibility)
-	fmt.Printf("Precipitation volume: %.2f mm/h\n", info.precipitationVolume())
-	fmt.Printf("Pressure: %d hPa\n", info.Main.Pressure)
-	fmt.Printf("Humidity: %d %%\n", info.Main.Humidity)
+	))
+	body = append(body, fmt.Sprintf("Visibility: %d m\n", info.Visibility))
+	body = append(body, fmt.Sprintf("🌧️ Precipitation volume: %.2f mm/h\n", info.precipitationVolume()))
+	body = append(body, fmt.Sprintf("Pressure: %d hPa\n", info.Main.Pressure))
+	body = append(body, fmt.Sprintf("Humidity: %d %%\n", info.Main.Humidity))
+
+	return strings.Join(body, "")
 }
 
 func convertToKmPerH(value float32) float32 {
